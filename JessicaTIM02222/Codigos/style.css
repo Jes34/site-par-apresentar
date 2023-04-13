@@ -1,0 +1,26 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+    background-color: beige;
+    }
+    .container{
+        max-width: 1000px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .class2{
+        text-align: center;
+    }
+    
+    header{
+        background-color: #0000;
+        width: 100%;
+    }
+    img{
+        text-align: center;
+        background-color: black;
+    }
+
+    
