@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Dynamic Opacity.
+ *
+ */
+
+(function ($, Drupal) {
+ 'use strict';
+
+ const dynamicOpacity = document.querySelectorAll('.dynamic-opacity li')
+
+const normalizeBetweenTwoRanges = (val, minVal, maxVal, newMin, newMax) => {
+ return newMin + (val - minVal) * (newMax - newMin) / (maxVal - minVal);
+};
+
+dynamicOpacity.forEach(function(currentValue, index, array) {
+ const normalizedValue = normalizeBetweenTwoRanges(index, 0.1, array.length, 0.3, 0.01);
+ currentValue.style.backgroundColor = 'rgba(255,255,255,' + normalizedValue + ')';
+});
+
+})(jQuery, Drupal);

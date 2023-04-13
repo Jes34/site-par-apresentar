@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Music Player.
+ *
+ */
+(function ($, Drupal) {
+  'use strict';
+  Drupal.behaviors.musicPlayerEvent = {
+    attach: function (context, settings) {
+
+      if ($(".music-player").length) {
+        // Prevent Drupal to execute this same custom JS on each context call (AJAX)
+        if (context !== document) { return }
+
+        var $audio = $(".music-player");
+        $audio.each(function () {
+          var $this = $(this);
+          var $button = $this.closest(".player-boxed").find(".play-button");
+
+          $button.on("click", function () {
+            if ($this[0].paused) {
+              $this[0].play();
+            } else {
+              $this[0].pause();
+            }
+          });
+
+        });
+      }
+    }
+  }
+})(jQuery, Drupal);

@@ -1,0 +1,10 @@
+/* Source and licensing information for the line(s) below can be found at http://www.ambev.com.br/modules/contrib/addtoany/js/addtoany.js. */
+(function(Drupal){'use strict';Drupal.behaviors.addToAny={attach:function(context,settings){if(context!==document&&window.a2a){a2a.init_all();}}};})(Drupal);
+/* Source and licensing information for the above line(s) can be found at http://www.ambev.com.br/modules/contrib/addtoany/js/addtoany.js. */;
+/* Source and licensing information for the line(s) below can be found at http://www.ambev.com.br/modules/contrib/datalayer/js/datalayer.js. */
+(function($){Drupal.behaviors.dataLayer={langPrefixes:function langPrefixes(){var languages=Drupal.settings.dataLayer.languages,langList=[];for(var lang in languages){if(languages[lang].prefix!==''){langList.push(languages[lang].prefix);}}
+return langList;},attach:function(){return}};})(jQuery);
+/* Source and licensing information for the above line(s) can be found at http://www.ambev.com.br/modules/contrib/datalayer/js/datalayer.js. */;
+/* Source and licensing information for the line(s) below can be found at http://www.ambev.com.br/modules/custom/davinci_datalayer/js/davinci-datalayer.js. */
+(function($,Drupal){Drupal.behaviors.davinciDatalayer={attach:function(context){}};})(jQuery,Drupal);
+/* Source and licensing information for the above line(s) can be found at http://www.ambev.com.br/modules/custom/davinci_datalayer/js/davinci-datalayer.js. */;

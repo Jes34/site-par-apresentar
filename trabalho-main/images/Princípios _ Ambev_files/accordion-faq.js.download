@@ -1,0 +1,102 @@
+/**
+ * @file
+ * Global utilities.
+ *
+ */
+( function ($) {
+  "use strict";
+
+  // Search
+  Drupal.behaviors.faq = {
+    attach: function(context,settings) {
+      var $accordion = $(context).find('.component-accordion').once('accordion');
+
+      /*
+      ** FAQ
+      */
+      if($accordion.length) {
+        var countAcc = 0;
+        function removeUrlHash() {
+          const uri = window.location.toString();
+          if (uri.indexOf("#") > 0) {
+            const clean_uri = uri.substring(0, uri.indexOf("#"));
+            window.history.replaceState({}, document.title, clean_uri);
+          };
+        };
+
+        $('.accordion-faq .coh-accordion-tabs-content-wrapper > .coh-accordion-title').each(function () {
+          countAcc = countAcc + 1;
+          var idAcc = "idAcc" + countAcc;
+          $(this).before('<div class="accordion-item-js" id="' + idAcc + '">');
+          $(this).appendTo('#' + idAcc);
+          $(this).on('click', function() {
+            const allTabs = $('div.accordion-faq .coh-accordion-tabs-content-wrapper').find('h3');
+            setTimeout(() => {
+              const tabsClosed = allTabs.filter(':not(.is-active)');
+              if (allTabs.length === tabsClosed.length) removeUrlHash();
+            }, 600);
+          });
+        });
+
+        var countItems = 0;
+        $('.accordion-faq .coh-accordion-tabs-content-wrapper > .accordion-item').each(function () {
+          countItems = countItems + 1;
+          var idItem = "idAcc" + countItems;
+          $(this).appendTo('#'+ idItem);
+        });
+
+        function icontains(elem, text) {
+          return (
+            elem.textContent ||
+            elem.innerText ||
+            $(elem).text() ||
+            ""
+          ).toUpperCase().indexOf((text || "").toUpperCase()) >= 0;
+        }
+        $.expr.pseudos.icontains = $.expr.createPseudo ?
+          $.expr.createPseudo(function(text) {
+            return function( elem ) {
+              return icontains(elem, text);
+            };
+          }) :
+
+          function(elem, i, match) {
+            return icontains(elem, match[3]);
+          };
+
+        let timeout = null;
+        $('#input-accordion-search').on('change keyup paste click', function () {
+
+          var searchTerm = $(this).val();
+
+          clearTimeout(timeout);
+          timeout = setTimeout(function () {
+            checkIfAccordionItemsAreVisible();
+          }, 100);
+
+          $('.coh-accordion-tabs-content-wrapper > .accordion-item-js').each(function () {
+            var  accordionItemId = '#' + $(this).attr('id');
+            $(accordionItemId + ':not(:icontains(' + searchTerm + '))').hide();
+            $(accordionItemId + ':not(:icontains(' + searchTerm + '))').removeClass("is-show");
+            $(accordionItemId + ':icontains(' + searchTerm + ')').show();
+            $(accordionItemId + ':icontains(' + searchTerm + ')').addClass("is-show");
+          });
+        });
+
+        function checkIfAccordionItemsAreVisible() {
+          var itemsShow = 0;
+          $('.coh-accordion-tabs-content-wrapper > .accordion-item-js').each(function () {
+            if($(this).hasClass('is-show')){
+              itemsShow = itemsShow + 1;
+            }
+          });
+          if (itemsShow <= 0) {
+            $(".accordion-no-results").addClass("not-results-show");
+          } else {
+            $(".accordion-no-results").removeClass("not-results-show");
+          }
+        }
+      }
+    }
+  };
+})(jQuery, Drupal)

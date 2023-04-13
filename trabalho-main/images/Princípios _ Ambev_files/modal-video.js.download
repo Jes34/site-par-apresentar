@@ -1,0 +1,60 @@
+/**
+ * @file
+ * Modal video.
+ *
+ */
+(function ($, Drupal) {
+    'use strict';
+
+    Drupal.behaviors.modalVideo = {
+      attach: function (context, settings) {
+        this.slideAddOrRemoveClickEventListener();
+
+        $.each($('.coh-modal .coh-video > .coh-video-inner.mejs__container:visible'), function () {
+          var video = $(this).find('.mejs__mediaelement video');
+          if(video[0].player && video[0].player.media) {
+            video[0].player.media.setCurrentTime(0);
+            video[0].player.media.play();
+          }
+        });
+
+      },
+      slideAddOrRemoveClickEventListener: function() {
+        var self = this;
+        if (typeof ARIAmodal === "object") {
+          $('.slick-slider').once('processed').each(function () {
+            if ($(this).data('coh-slider')) {
+              self.addOrRemoveClickEventListener(this, 'add', false);
+            }
+            $(this).on('beforeChange', function() {
+              self.addOrRemoveClickEventListener(this, 'remove', true);
+            });
+            $(this).on('afterChange', function() {
+              self.addOrRemoveClickEventListener(this, 'add', true);
+            });
+          });
+        }
+      },
+
+      addOrRemoveClickEventListener: function(carousel, action, all) {
+        var selector = '.slick-cloned [data-modal-open]';
+        if (all) {
+          selector = '[data-modal-open]';
+        }
+        var i;
+        var videos = $(carousel).find(selector);
+        for (i = 0; i < videos.length; i += 1) {
+          var attr = $(videos[i]).attr('data-modal-open')
+          if(typeof attr !== typeof undefined && attr !== false) {
+            if (action == 'add') {
+              videos[i].addEventListener('click', ARIAmodal.openModal);
+            }
+            else {
+              videos[i].removeEventListener('click', ARIAmodal.openModal);
+            }
+          }
+        }
+      }
+    };
+
+  })(jQuery, Drupal);

@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Product List.
+ *
+ */
+(function ($) {
+    'use strict';
+    Drupal.behaviors.productList = {
+      attach: function (context, settings) {
+        $('input.product-card-path').each(function(index) {
+            var link = $(this).val();
+            $(this).parent().find('a.product-card-details-button').attr('href', link);
+        });
+      }
+    }
+  })(jQuery);

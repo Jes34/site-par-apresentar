@@ -1,0 +1,25 @@
+
+    img{
+        width: 500px;
+    }
+    .container{
+        max-width: 10000px;
+        display: flex;
+        align-items: center;
+        text-decoration: #0000;
+        margin: auto;
+
+    }
+    
+
+    img, main{
+        display: inline-block;
+        background-color: beige;
+        align-self: initial;
+    }
+    p{
+        font-size: 13px;
+    }
+
+
+    

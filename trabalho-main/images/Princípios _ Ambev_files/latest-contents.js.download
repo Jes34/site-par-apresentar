@@ -1,0 +1,27 @@
+/**
+ * @file
+ * Latest Contents.
+ *
+ */
+ (function ($, Drupal, window) {
+    'use strict';
+    Drupal.behaviors.abinbevLatestContents = {
+      attach: function (context, settings) {
+  
+        if ($('.latest-contents article:first-child .card-background').length) {
+          var $nakedCard = $('.latest-contents article:first-child .card-background');
+          var $newImage = $nakedCard.attr('data-background');
+          var $backgroundTarget = $('.latest-contents article:first-child .container-news-card')
+  
+          $backgroundTarget.attr('style', 'background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.863) 1%, rgba(0, 0, 0, 0.243) 34%, rgba(0, 0, 0, 0) 66%), url(' + $newImage + ');');
+        }
+  
+        if ($('.latest-contents article:first-child .card-solid .news-teaser-solid-top').length) {
+          var $solidCard = $('.latest-contents article:first-child .card-solid .news-teaser-solid-top');
+          var $newImage = $solidCard.attr('data-background');
+  
+          $solidCard.attr('style', 'background-image: url(' + $newImage + ');');
+        }
+      }
+    };
+  })(jQuery, Drupal, window);

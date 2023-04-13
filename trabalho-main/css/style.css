@@ -1,0 +1,44 @@
+* {
+    margin: 1px;
+    padding: 1px;
+    align-items: center;
+    animation-duration: initial;
+    font-family: 600px;
+    background-color: rgb(240, 240, 236);
+}
+
+body {
+    align-items: end;
+}
+.nav-link{
+    align-items: center;
+    vertical-align: bottom;
+    print-color-adjust: beige;
+    font: optional;
+}
+
+.container {
+    max-width: 10000px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: #0000;
+    margin: auto;
+
+}
+
+.title {
+    font-weight: 600;   
+}
+
+.main {
+    display: inline-block;
+    align-self: center;
+    align-items: center;
+}
+
+.classcorpo {
+    font-size: 16px;
+    font-weight: 600px;
+    align-items: center;
+}

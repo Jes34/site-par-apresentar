@@ -1,0 +1,100 @@
+/**
+ * @file
+ * Simple Beer Smart Button
+ *
+ */
+ (function ($, Drupal) {
+    'use strict';
+    Drupal.behaviors.simpleBeerSmartButton = {
+        apply: false,
+        attach: function (context, settings) {
+            const apiEndpoint = "https://get.geojs.io/v1/ip/geo.js";
+            if (!this.apply) {
+                this.apply = true;
+
+                function setCookie(cname, cvalue, exdays) {
+                    var d = new Date();
+                    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                    var expires = "expires="+ d.toUTCString();
+                    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                }
+    
+                function getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                };
+    
+                function getUrlParameter(name) {
+                    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                    var results = regex.exec(location.search);
+                    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+                };
+    
+                // pass cc (CountryCode) as URL parameter for test purpose ex: ?cc=US
+                var countryCode = getUrlParameter("cc") ? getUrlParameter("cc") : getCookie("countryCode");
+    
+                if (countryCode == "" || typeof countryCode == 'undefined') {
+                    jQuery.ajax({
+                        method: 'GET',
+                        dataType: 'jsonp',
+                        url: apiEndpoint
+                    })
+                    .done(function (response) {
+                        countryCode = response.country_code;
+                        showButtonByCountryCode(countryCode);
+                    });
+                } else {
+                    showButtonByCountryCode(countryCode);
+                }
+    
+                /* Function responsible for showing Buy Here button on Simple Beer internal page,
+                component Manual Content and Geolocation Product Card */
+                function showButtonByCountryCode(countryCode){
+                    var user_country = countryCode;
+                    var default_btn = true;
+                    $('.sb-smart-button').each(function(){
+                        var upperCaseCC = $(this).attr('data-country').toUpperCase();
+                        if(upperCaseCC == user_country){
+                            $(this).css('display', 'inline-block');
+                            $(this).parent().css('width', '100%');
+                            default_btn = false;
+                        }
+                    });
+                    if(default_btn == true){
+                        $('.sb-smart-button[data-country=default]').css('display', 'inline-block');
+                    }
+                    // Geolocation product card
+                    $('.geo-product-card-slide').each(function(){
+                        var defaultBtn = $(this).find('.default-button').attr('data-country');
+                        var removeCard = true;
+                        $(this).find('.geolocation-button').each(function(){
+                            var upperCaseCC = $(this).attr('data-country').toUpperCase();
+                            if(upperCaseCC == user_country){
+                                $(this).css('display', 'inline-block');
+                                removeCard = false;
+                            }
+                        });
+                        if (defaultBtn == 'default'){
+                            removeCard = false;
+                        }
+                        if(removeCard == true){
+                            $(this).remove();
+                        }
+                    });
+                }
+            }
+        }
+    }
+})(jQuery, Drupal);
