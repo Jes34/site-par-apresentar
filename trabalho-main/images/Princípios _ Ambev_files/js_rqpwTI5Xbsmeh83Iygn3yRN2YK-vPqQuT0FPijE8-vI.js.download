@@ -1,0 +1,6 @@
+/* Source and licensing information for the line(s) below can be found at http://www.ambev.com.br/themes/custom/corebr_whitelabel/js/change-product-url.js. */
+(function($,Drupal){'use strict';Drupal.behaviors.productURL={apply:false,attach:function(context,settings){var self=this;if(!this.apply){this.apply=true;$(document).ready(function(){let productTabsItem=document.querySelectorAll('.product-tabs-container ul li a')
+if(productTabsItem!=undefined){const url=window.location.href
+const getHash=/#/.exec(url);if(getHash!=null){var getId=url.slice(getHash.index);$(productTabsItem).each(function(){if($(this).attr('href')==getId){$(this).click();}})
+self.changeURL(productTabsItem);}else{if($('.product-tabs-container ul li.is-active a').attr('href')!=undefined){self.changeUrlWithoutScroll($('.product-tabs-container ul li.is-active a').attr('href'));self.changeURL(productTabsItem);}}}})}},changeURL:function(item){var self=this;$(item).click(function(){self.changeUrlWithoutScroll($(this).attr('href'));});},changeUrlWithoutScroll:function(href){$(window).one('scroll',function(){document.body.scrollTop=0;document.documentElement.scrollTop=0;});window.location.href=href;}}})(jQuery,Drupal);
+/* Source and licensing information for the above line(s) can be found at http://www.ambev.com.br/themes/custom/corebr_whitelabel/js/change-product-url.js. */;

@@ -1,0 +1,16 @@
+/**
+ * @file
+ * AOS Init.
+ *
+ */
+(function ($, Drupal) {
+  "use strict";
+  Drupal.behaviors.aosOverflow = {
+    attach: function (context, settings) {
+      if ($(".aos-container").length) {
+        AOS.init();
+        $("body").css("overflow-x", "hidden");
+      }
+    },
+  };
+})(jQuery, Drupal);

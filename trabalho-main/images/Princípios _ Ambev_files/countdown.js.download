@@ -1,0 +1,133 @@
+/**
+ * @file
+ * Countdown.
+ *
+ */
+ (function ($, Drupal) {
+  'use strict';
+
+  Drupal.behaviors.countdown = {
+    attach: function (context, settings) {
+      var $countdownComponent = $(context).find('.countdown-component').once('countdown');
+
+      if ($countdownComponent.length) {
+
+        var $countdownItem = $('.countdown-item');
+
+        var count = setInterval(function() {
+
+          var $arrayGame = [];
+
+          $countdownItem.each(function() {
+            var $this = $(this);
+
+            //get dom elements
+            var $countdownItemDay = $this.attr('data-game-day');
+            var $countdownItemMonth = $this.attr('data-game-month');
+            var $countdownItemYear = $this.attr('data-game-year');
+            var $countdownItemHour = $this.attr('data-game-hour');
+            var $countdownItemUTC = parseInt($this.attr('data-game-utc')) * 60 * 60000;
+
+            var $gameDay = parseInt($countdownItemDay);
+            var $gameMonth = parseInt($countdownItemMonth) - 1;
+            var $gameYear = parseInt($countdownItemYear);
+            var $gameHour = parseInt($countdownItemHour.substr(0, 2));
+            var $gameMinutes = parseInt($countdownItemHour.substr(3, 2));
+
+            var now = new Date();
+            var nowUtc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()).getTime() - ($countdownItemUTC);
+            var thisDate = new Date($gameYear, $gameMonth, $gameDay, $gameHour, $gameMinutes);
+
+            var getDate = parseInt(thisDate.getTime());
+            var totalTime = parseInt(thisDate.getTime());
+
+            $this.attr("data-game-validation", getDate);
+            $this.attr("data-game-total-time", totalTime);
+
+            var $dateValidation = parseInt($this.attr("data-game-validation"));
+            var $dateTotalTime = parseInt($this.attr("data-game-total-time"));
+
+            var timeleft = ($dateTotalTime - nowUtc);
+
+            $this.attr("data-game-total-time", timeleft);
+            var $dateTotalTime = parseInt($this.attr("data-game-total-time"));
+
+            if ($dateValidation > nowUtc) {
+              $arrayGame.push($dateTotalTime);
+            } else {
+              $arrayGame.push(99999999999999);
+            }
+
+
+          });
+
+          var dateMin = Math.min.apply(null, $arrayGame );
+
+          if (dateMin != 99999999999999) {
+            var $nowGame = $($countdownItem[$arrayGame.indexOf(dateMin)]);
+            var $nowTime = parseInt($nowGame.attr("data-game-validation"));
+            var $utcCalc = parseInt($nowGame.attr("data-game-utc")) * 60 * 60000;
+
+            //Template
+            var $teamaName = $nowGame.attr("data-team-a-name");
+            var $teamaLogo = $nowGame.parent().find('.team-a-logo').attr('src');
+            var $teamaAlt = $nowGame.attr("data-team-a-alt");
+            var $teamaTitle = $nowGame.attr("data-team-a-title");
+
+
+            var $teambName = $nowGame.attr("data-team-b-name");
+            var $teambLogo = $nowGame.parent().find('.team-b-logo').attr('src')
+            var $teambAlt = $nowGame.attr("data-team-b-alt");
+            var $teambTitle = $nowGame.attr("data-team-b-title");
+
+            var $templateTeamALogo = $('.countdown-receive-team-a-logo');
+            var $templateTeamAName = $('.countdown-receive-team-a-name');
+
+            var $templateTeamBLogo = $('.countdown-receive-team-b-logo');
+            var $templateTeamBName = $('.countdown-receive-team-b-name');
+
+            $templateTeamAName.text($teamaName);
+            $templateTeamALogo.attr('src', $teamaLogo);
+            $templateTeamALogo.attr('alt', $teamaAlt);
+            $templateTeamALogo.attr('title', $teamaTitle);
+
+            $templateTeamBName.text($teambName);
+            $templateTeamBLogo.attr('src', $teambLogo);
+            $templateTeamBLogo.attr('alt', $teambAlt);
+            $templateTeamBLogo.attr('title', $teambTitle);
+
+            var $printDays = $('.countdown-days');
+            var $printHours = $('.countdown-hours');
+            var $printMinutes = $('.countdown-minutes');
+            var $printSeconds = $('.countdown-seconds');
+
+
+            // countdown
+            var now = new Date();
+            var nowUtc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()).getTime() - ($utcCalc);
+            var timeleft = $nowTime - nowUtc;
+
+            if (timeleft > 0) {
+              $('.countdown-component').css('display', 'flex');
+            }
+
+            var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+
+            $printDays.text(days);
+            $printHours.text(hours);
+            $printMinutes.text(minutes);
+            $printSeconds.text(seconds);
+          } else {
+            $('.countdown-component').css('display', 'none');
+          }
+
+          }, 1000);
+
+      }
+
+    }
+  }
+})(jQuery, Drupal);

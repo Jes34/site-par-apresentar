@@ -1,0 +1,36 @@
+/**
+ * @file
+ * Search Banner.
+ *
+ */
+ (function ($, Drupal) {
+  "use strict";
+
+  Drupal.behaviors.inputText = {
+    attach: function (context, settings) {
+      const $banner = $(context).find('.js-search-banner').once('inputText');
+
+      if ($banner.length) {
+
+        const $inputText = $banner.attr('data-input-text');
+        const $form = $banner.find('.js-form-item input.form-text');
+
+        let $setTexts = {
+          input: $inputText,
+          emptyText: 'Setting not found',
+        }
+
+        let {input, emptyText} = $setTexts;
+
+        if (input == emptyText) {
+          $form.attr('placeholder', '');
+        } else {
+          $form.attr('placeholder', input);
+        }
+
+        $('.search-banner-content').css('display', 'flex');
+
+      }
+    },
+  };
+})(jQuery, Drupal);

@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Menu landing page.
+ *
+ */
+(function ($, Drupal, window) {
+    'use strict';
+
+    Drupal.behaviors.menuLandingPage = {
+        attach: function (context, settings) {
+            var $menuLandingPage = $('.custom-menu-container').eq(0);
+            if ($menuLandingPage) {
+                var windowHeight = $(window).height();
+                var marginDiscount = $menuLandingPage.find('.custom-menu-items').is(':visible') ? parseInt($menuLandingPage.css('height')) : 1;
+                $(window).scroll(function() {
+                    if (this.pageYOffset + marginDiscount > windowHeight) {
+                        $menuLandingPage.addClass('fixed-menu menu-mobile-hidden');
+                        $menuLandingPage.removeClass('menu-visible');
+                        $menuLandingPage.find('.custom-menu-logo, .custom-menu-items').removeClass('menu-visible');
+                    } else {
+                        $menuLandingPage.removeClass('fixed-menu');
+                        $menuLandingPage.removeClass('menu-mobile-hidden');
+                    }
+                });
+            }
+
+            $menuLandingPage.find('.fixed-menu-mobile-open').on('click', function() {
+                $menuLandingPage.removeClass('menu-mobile-hidden');
+            });
+
+            $('.custom-menu-container').each(function() {
+                var $menuContainer = $(this);
+                $menuContainer.find('.custom-menu-items li a, button.coh-interaction').once('custom-menu').on('click', function() {
+                    if ($(this).hasClass('top-menu-mobile-open') && $menuContainer.hasClass('fixed-menu')) {
+                        $menuContainer.addClass('menu-mobile-hidden');
+                    }
+                    $menuContainer.toggleClass('menu-visible');
+                    $menuContainer.find('.custom-menu-logo, .custom-menu-items').toggleClass('menu-visible');
+                });
+            });
+        }
+    };
+
+  })(jQuery, Drupal, window);

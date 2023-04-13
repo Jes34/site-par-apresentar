@@ -1,0 +1,29 @@
+/**
+ * @file
+ * Change background color menu
+ *
+ */
+(function ($, Drupal) {
+  'use strict';
+  Drupal.behaviors.tagMenuItem = {
+    apply: false,
+    attach: function (context, settings) {
+      $(function () {
+        var pathname = window.location.pathname
+        var pathnameToCheck = pathname
+        var pathnameSplited = pathname.split('/')
+        var isLanguageCodePresentInUrl = pathnameSplited[1].length === 2
+
+        if (isLanguageCodePresentInUrl) {
+          var pathnameToCheck = '/' + pathnameSplited.slice(2).join('/')
+        }
+
+        $('.tag-menu-item').each(function () {
+          if (pathnameToCheck === $(this).attr('href')) {
+            $(this).addClass('tag-menu-item-active');
+          }
+        });
+      })
+    }
+  }
+})(jQuery, Drupal);

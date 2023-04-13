@@ -1,0 +1,67 @@
+/**
+ * @file
+ * Event
+ *
+ */
+(function ($, Drupal) {
+
+  'use strict';
+
+  Drupal.behaviors.event = {
+    attach: function (context, settings) {
+      // Prevent Drupal to execute this same custom JS on each context call (AJAX)
+      if (context !== document) { return }
+
+      // If is Event or Event Card, continue to execute
+      var $eventEntity = $('.js-event-entity')
+
+      //Event Card
+      if ($eventEntity.length > 0) {
+        $eventEntity.each(function () {
+
+          // Date display manipulations
+          var $startDate = $(this).find('.js-event-start-date', context)
+          var $startDay = $startDate.find('.js-event-start-date__day')
+          var $startMonth = $startDate.find('.js-event-start-date__month')
+          var $startYear = $startDate.find('.js-event-start-date__year')
+          var startDateInfo = $startDate.attr('datetime').split('-')
+          var startDay = startDateInfo[2]
+          var startMonth = startDateInfo[1]
+          var startYear = startDateInfo[0]
+
+          var $startEndDatesSeparator = $(this).find('.js-start-end-dates-separator', context)
+
+          var $endDate = $(this).find('.js-event-end-date', context)
+          var $endDay = $endDate.find('.js-event-end-date__day')
+          var $endMonth = $endDate.find('.js-event-end-date__month')
+          var $endYear = $endDate.find('.js-event-end-date__year')
+          var endDateInfo = $endDate.attr('datetime').split('-')
+          var endDay = endDateInfo[2]
+          var endMonth = endDateInfo[1]
+          var endYear = endDateInfo[0]
+
+          var isStartDayEqualThanEndDay = startDay === endDay
+          var isStartMonthEqualThanEndMonth = startMonth === endMonth
+          var isStartYearEqualThanEndYear = startYear === endYear
+
+          if (isStartDayEqualThanEndDay) {
+            $startMonth.remove()
+            $startYear.remove()
+            $endDay.remove()
+            $startEndDatesSeparator.remove()
+          }
+
+          if (!isStartDayEqualThanEndDay && isStartMonthEqualThanEndMonth) {
+            $startMonth.remove()
+          }
+
+          if (isStartYearEqualThanEndYear) {
+            $startYear.remove()
+          }
+        })
+
+      }
+    }
+  }
+
+})(jQuery, Drupal);

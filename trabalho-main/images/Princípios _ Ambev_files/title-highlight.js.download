@@ -1,0 +1,30 @@
+/**
+ * @file
+ * Title Highlight.
+ *
+ */
+ (function ($, Drupal) {
+  'use strict';
+
+  Drupal.behaviors.titleHightlight = {
+    attach: function (context, settings) {
+      var $titleItems = $(context).find('.coh-style-title-highlight').once('titleHightlight');
+
+      if ($titleItems.length) {
+
+        $titleItems.each(function() {
+          var $this = $(this);
+          var $span = $this.find('span');
+
+          if ($span.length) {
+            var $lastSpan = $($span[$span.length-1]);
+              $lastSpan.addClass('title-highlight-item');
+              $lastSpan.css("display", "inline-block");
+          }
+
+        });
+
+      }
+    }
+  }
+})(jQuery, Drupal);

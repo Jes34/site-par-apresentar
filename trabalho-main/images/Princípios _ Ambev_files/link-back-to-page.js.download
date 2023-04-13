@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Link back to page.
+ *
+ */
+(function ($, Drupal, window) {
+    'use strict';
+
+    Drupal.behaviors.linkBackToPage = {
+      attach: function (context, settings) {
+        $('.budx-link-back-to-page a.back-to-page').once('back-to-page').on('click', function(e) {
+          e.preventDefault();
+          window.history.back();
+        });
+      }
+    };
+
+  })(jQuery, Drupal, window);

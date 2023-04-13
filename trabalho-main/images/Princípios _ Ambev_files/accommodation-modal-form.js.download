@@ -1,0 +1,109 @@
+/**
+ * @file
+ * Accommodation Modal Form.
+ *
+ */
+ (function ($, Drupal, Cookies, window) {
+  'use strict';
+
+  Drupal.behaviors.accommodationForm = {
+    attach: function (context, settings) {
+      var $accommodationForm = $(context).find('.js-acc-form').once('accommodationForm');
+
+      if ($accommodationForm.length) {
+
+        function redirectLink(cookie) {
+          if (cookie == true) {
+            var $modalButton = $('.js-acc-modal-button');
+
+            $modalButton.each(function() {
+              var $buttonUrl = $(this).attr('data-url');
+              $(this).removeAttr('data-modal-open');
+              $(this).on('click', (e) => {
+                e.preventDefault();
+                window.open($buttonUrl, '_blank');
+              });
+            });
+          }
+        }
+
+        var modalForm = Cookies.get("modalForm") === "1";
+        var $formItems = [];
+        $formItems = $('.js-acc-form');
+
+        function getContentValues() {
+          var td_id = Cookies.get("_td");
+          $formItems.each(function() {
+
+            var $modalActive = parseInt($('.coh-modal').attr('data-modal-id'));
+            var $redirectUrl = $($formItems[$modalActive]).attr('data-redirect');
+
+            var $formRedirect = $(this).find('.acc-form-td-url input');
+            var $formTd = $(this).find('.acc-form-td input');
+
+            $formRedirect.attr('value', $redirectUrl);
+            $formTd.attr('value', td_id);
+          });
+        }
+
+        function setModal() {
+          var $buttonOpen = $('.js-acc-modal-button');
+          var $modal = $('.coh-modal');
+
+          $buttonOpen.each(function(i) {
+            $(this).on('click', () => {
+              $modal.attr('data-modal-id', i);
+              getContentValues();
+            });
+          });
+        }
+        setModal();
+
+        //Modal directs to new page(booking url)
+        $(document).ajaxComplete(function (settings) {
+          if ($('.messages').length) {
+            $formItems.each(function() {
+
+              if($($(this).find('.messages')).length && !$($(this).find('.messages')).hasClass('messages--error')) {
+
+                let modal = {
+                  modalClose: document.querySelector('.coh-modal-close-button'),
+                  modalActive: parseInt($('.coh-modal').attr('data-modal-id')),
+                }
+
+                var $redirectUrl = $($formItems[modal.modalActive]).attr('data-redirect');
+                Cookies.set("modalForm", 1, { expires: 30 });
+                modal.modalClose.click();
+                var modalForm = Cookies.get("modalForm") === "1";
+
+                redirectLink(modalForm);
+                window.open($redirectUrl, '_blank');
+
+                let datalayer = window.dataLayer;
+
+                let pushInfo = {
+                  title: document.title,
+                  category: 'Form',
+                  component: 'Accommodation Form'
+                }
+
+                //Pass infos to webform datalayer object
+                function pushDatalayer(datalayer) {
+                  $(datalayer).each(function() {
+                    if ($(this)[0].webform) {
+                      $(this)[0]['title'] = pushInfo.title;
+                      $(this)[0]['category'] = pushInfo.category;
+                      $(this)[0]['component'] = pushInfo.component;
+                    }
+                  });
+                }
+                pushDatalayer(datalayer);
+              }
+            });
+          }
+        });
+        redirectLink(modalForm);
+      }
+    }
+  }
+})(jQuery, Drupal, Cookies, window);

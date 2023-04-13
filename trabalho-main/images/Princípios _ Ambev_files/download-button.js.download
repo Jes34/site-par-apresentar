@@ -1,0 +1,19 @@
+/**
+ * @file
+ * Download button.
+ *
+ */
+(function ($, Drupal, window) {
+  'use strict';
+  Drupal.behaviors.abinbevDownloadButton = {
+    attach: function (context, settings) {
+      if ($('.container-download-button')) {
+        var $downloadButtons = $('.container-download-button');
+        $($downloadButtons).each(function () {
+          var $fileUrl = $(this).find('.download-url-template').text();
+          var link = $(this).find('.download-url-template').parents('.container-download-button').find('a').attr('href', $fileUrl);
+        });
+      }
+    }
+  };
+})(jQuery, Drupal, window);

@@ -1,0 +1,36 @@
+/**
+ * @file
+ * Multiple Accordion.
+ *
+ */
+ (function ($, Drupal) {
+  "use strict";
+
+  Drupal.behaviors.multipleAccordion = {
+    attach: function (context, settings) {
+      var $accordion = $(context).find('.multiple-accordion-item').once('multipleAccordion');
+
+      if ($accordion.length) {
+        var $accordionItem = $('.js-accordion-item');
+        $accordionItem.each(function(i) {
+          var $self = $(this);
+          var $selfButton = $self.find('button');
+          var $selfPanel = $self.find('.panel');
+
+          $selfButton.on('click', function() {
+            $selfButton.toggleClass('active');
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+              $(panel).css('padding-top', '0px');
+            } else {
+              $(panel).css('padding-top', '20px');
+              panel.style.maxHeight = panel.scrollHeight + 50 + "px";
+              panel.style.height = panel.scrollHeight + 20 + "px";
+            }
+          });
+        });
+      }
+    },
+  };
+})(jQuery, Drupal);
